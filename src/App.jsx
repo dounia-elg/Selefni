@@ -1,18 +1,32 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import { BrowserRouter , Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import SimulationPage from "./pages/SimulationPage";
+import ApplicationPage from "./pages/ApplicationPage";
+import ConfirmationPage from "./pages/ConfirmationPage";
+import AdminLoginPage from "./pages/AdminLoginPage";
+import AdminDashboard from "./pages/AdminDashboard";
+import ApplicationDetailPage from "./pages/ApplicationDetailPage";
+import NotificationsPage from "./pages/NotificationsPage";
 
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  
   return (
-    <>
-    
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/simulate" element={<SimulationPage />} />
+        <Route path="/apply/:simulationId" element={<ApplicationPage />} />
+        <Route path="/confirmation" element={<ConfirmationPage />} />
 
-      <h1 className='bg-blue-500 '>DOUNIA</h1>
-    </>
+        <Route path="/admin/login" element={<AdminLoginPage />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/applications/:id" element={<ApplicationDetailPage />} />
+        <Route path="/admin/notifications" element={<NotificationsPage />} />
+      </Routes> 
+    </BrowserRouter>
   )
 }
 
