@@ -11,6 +11,8 @@ export default function SimulationForm() {
 
     const [results, setResults] = useState(null);
     const [saving, setSaving] = useState(false);
+    const [savedWhere, setSavedWhere] = useState(null);
+    const [lastSimulation, setLastSimulation] = useState(null);
     const [showSchedule, setShowSchedule] = useState(false);
 
     const toNumber = (v) => parseFloat(v) || 0;
@@ -51,23 +53,47 @@ export default function SimulationForm() {
     };
 
  const saveSimulation = async (simulation) => {
-  setSaving(true);
+    setSaving(true);
+    setSavedWhere(null);
 
-  try {
-    const response = await fetch('http://localhost:3000/simulations', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(simulation),
-    });
+    
+    setLastSimulation(simulation);
 
-    if (response.ok) {
-      console.log('Simulation saved to json-server');
+    const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    const endpoint = `${API.replace(/\/$/, '')}/simulations`;
+
+    try {
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(simulation),
+        });
+
+        if (!response.ok) {
+            console.warn('Server responded with status', response.status);
+            throw new Error('Bad response');
+        }
+
+        const data = await response.json();
+        
+        setLastSimulation(data);
+        setSavedWhere('server');
+        setSaving(false);
+        return data;
+    } catch (err) {
+        
+        try {
+            const sims = JSON.parse(localStorage.getItem('simulations') || '[]');
+            sims.push(simulation);
+            localStorage.setItem('simulations', JSON.stringify(sims));
+            setSavedWhere('local');
+        } catch (e) {
+            console.error('Failed to save locally', e);
+            setSavedWhere('failed');
+        }
+        setSaving(false);
+        return simulation;
     }
-  } catch (error) {
-    console.log('Using json-server backend');
-  }
-
-  setSaving(false);
 };
 
   
@@ -237,8 +263,8 @@ export default function SimulationForm() {
                             
                             <div className="bg-white/80 p-4 rounded-xl text-center shadow-sm">
                                 <div className="text-sm text-gray-600 mb-1">Status</div>
-                                <div className={`text-xl font-bold ${saving ? 'text-amber-600' : 'text-green-600'}`}>
-                                    {saving ? 'Saving...' : 'Saved'}
+                                <div className={`text-xl font-bold ${saving ? 'text-amber-600' : savedWhere === 'server' ? 'text-green-600' : savedWhere === 'local' ? 'text-blue-600' : 'text-gray-600'}`}>
+                                    {saving ? 'Saving...' : savedWhere === 'server' ? 'Saved (server)' : savedWhere === 'local' ? 'Saved (local)' : savedWhere === 'failed' ? 'Save failed' : 'Not saved'}
                                 </div>
                             </div>
                         </div>
