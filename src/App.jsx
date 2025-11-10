@@ -1,6 +1,6 @@
-import { useState } from 'react'
+
 import './App.css'
-import { BrowserRouter , Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import SimulationPage from "./pages/SimulationPage";
 import ApplicationPage from "./pages/ApplicationPage";
@@ -14,7 +14,7 @@ import NotificationsPage from "./pages/NotificationsPage";
 function App() {
   
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/simulate" element={<SimulationPage />} />
@@ -26,7 +26,7 @@ function App() {
         <Route path="/admin/applications/:id" element={<ApplicationDetailPage />} />
         <Route path="/admin/notifications" element={<NotificationsPage />} />
       </Routes> 
-    </BrowserRouter>
+    </Router>
   )
 }
 
