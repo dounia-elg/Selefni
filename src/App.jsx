@@ -9,12 +9,15 @@ import AdminLoginPage from "./pages/AdminLoginPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import ApplicationDetailPage from "./pages/ApplicationDetailPage";
 import NotificationsPage from "./pages/NotificationsPage";
+import Navbar from "./components/Navbar";
 
 
 function App() {
   
   return (
     <Router>
+      <Navbar /> 
+      <div className="pt-20"></div>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/simulate" element={<SimulationPage />} />
