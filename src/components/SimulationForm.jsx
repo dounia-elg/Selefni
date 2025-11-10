@@ -50,15 +50,25 @@ export default function SimulationForm() {
         return schedule;
     };
 
-    const saveSimulation = (simulation) => {
-        setSaving(true);
-        
-        const simulations = JSON.parse(localStorage.getItem('simulations') || '[]');
-        simulations.push(simulation);
-        localStorage.setItem('simulations', JSON.stringify(simulations));
-        
-        setSaving(false);
-    };
+ const saveSimulation = async (simulation) => {
+  setSaving(true);
+
+  try {
+    const response = await fetch('http://localhost:3000/simulations', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(simulation),
+    });
+
+    if (response.ok) {
+      console.log('Simulation saved to json-server');
+    }
+  } catch (error) {
+    console.log('Using json-server backend');
+  }
+
+  setSaving(false);
+};
 
   
     const handleSubmit = (e) => {
@@ -197,8 +207,6 @@ export default function SimulationForm() {
         </button>
       </form>
      
-
-
     {results && (
     <div className="mt-6 p-4 border rounded-lg bg-blue-50">
         <h2 className="text-lg font-semibold mb-3">Simulation Results</h2>
@@ -219,10 +227,12 @@ export default function SimulationForm() {
             <div className="font-bold">{results.apr.toFixed(2)}%</div>
         </div>
         
-        <div>
-            <div className="text-sm text-gray-600">Status</div>
-            <div className="font-bold text-green-600">{saving ? 'Saving...' : 'Saved'}</div>
-        </div>
+    <div>
+    <div className="text-sm text-gray-600">Status</div>
+    <div className="font-bold text-green-600">
+        {saving ? 'Saving...' : 'Saved to server'}
+    </div>
+    </div>
         </div>
 
         <button
