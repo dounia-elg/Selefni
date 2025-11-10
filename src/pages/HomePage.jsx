@@ -18,7 +18,7 @@ export default function HomePage() {
 
         <p className="text-gray-700 text-lg mb-12 max-w-2xl mx-auto leading-relaxed">
           Smart loan simulations that help you make confident financial decisions. 
-          Real numbers, real options—no guessing games.
+          Real numbers, real options no guessing games.
         </p>
 
         <div className="flex justify-center gap-5">
